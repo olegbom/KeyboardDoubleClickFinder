@@ -1,0 +1,51 @@
+﻿<Window x:Class="KeyboardDoubleClickFinder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KeyboardDoubleClickFinder"
+        mc:Ignorable="d"
+        Title="Key Name ▍ Current Delta ms ▍ Prev Delta ms ▍ Double Prev Delta ms ▍ Min Delta ms" Height="450" Width="800" PreviewKeyDown="MainWindow_OnKeyDown"  KeyUp="MainWindow_OnKeyUp"
+        d:DataContext="{d:DesignInstance local:MainViewModel}">
+    <Window.Resources>
+        <Style x:Key="HighlightRow" TargetType="{x:Type DataGridRow}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsLittleDelta}" Value="true">
+                    <Setter Property="Background" Value="LightPink" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="1"   HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <DataGrid HeadersVisibility="None" x:Name="myGrid"
+                      IsReadOnly="True" ItemsSource="{Binding Keys}" AutoGenerateColumns="False" FontFamily="Consolas" RowStyle="{StaticResource HighlightRow}"
+                      HorizontalScrollBarVisibility="Disabled">
+                <DataGrid.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel MaxHeight="{Binding ElementName = myGrid, Path=ActualHeight}" Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </DataGrid.ItemsPanel>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Reset" Click="MenuItem_OnClick">
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Mode=OneWay, Path=Key, StringFormat={}{0}}"/>
+                    <DataGridTextColumn Binding="{Binding Mode=OneWay, Path=Delta}"/>
+                    <DataGridTextColumn Binding="{Binding Mode=OneWay, Path=PrevDelta}"/>
+                    <DataGridTextColumn Binding="{Binding Mode=OneWay, Path=DoublePrevDelta}"/>
+                    <DataGridTextColumn Binding="{Binding Mode=OneWay, Path=MinDelta}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+        </ScrollViewer>
+       
+    </Grid>
+</Window>
